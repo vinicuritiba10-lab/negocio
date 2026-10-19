@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="description" content="SiteExpress: modelos de sites e sistemas para o seu negócio, prontos em poucos dias e com preço acessível.">
+    <title>SiteExpress | Sites e sistemas para o seu negócio</title>
+    <link rel="icon" type="image/png" href="img/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="topo">
+        <div class="conteudo topo-conteudo">
+            <a href="#inicio" class="marca" aria-label="SiteExpress, voltar ao início">
+                <img src="img/logo.png" class="logo logo-claro" alt="SiteExpress" width="720" height="199">
+                <img src="img/logo-escuro.png" class="logo logo-escuro" alt="" width="720" height="199">
+            </a>
+
+            <button class="menu-botao" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+
+            <nav id="menu" class="nav-links" aria-label="Principal">
+                <a href="#servicos">Serviços</a>
+                <a href="#precos">Preços</a>
+                <a href="#como-funciona">Como funciona</a>
+                <a href="#sobre">Sobre</a>
+                <a href="#pedido" class="nav-pedido">Fazer pedido</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+
+        <!-- INÍCIO -->
+        <section id="inicio" class="hero">
+            <div class="conteudo hero-grade">
+                <div class="hero-texto">
+                    <h1>Sites e sistemas para o seu negócio, prontos em poucos dias.</h1>
+                    <p>Olá, somos a SiteExpress! Aqui você encontra modelos de sites e sistemas para o seu negócio, de forma rápida e com um preço muito acessível. Seja o seu negócio pequeno ou grande, estamos aqui para você. ;)</p>
+                    <div class="hero-acoes">
+                        <a href="#servicos" class="botao">Ver serviços</a>
+                        <a href="#precos" class="botao-secundario">Ver preços</a>
+                    </div>
+                    <p class="hero-nota">Sites a partir de R$ 390, em até 10x no cartão.</p>
+                </div>
+
+                <div class="hero-arte" aria-hidden="true">
+                    <span class="bola bola-vermelha"></span>
+                    <span class="bola bola-amarela"></span>
+                    <span class="bola bola-verde"></span>
+                    <img src="img/mulher.webp" class="hero-foto" alt="" width="945" height="1035">
+                </div>
+            </div>
+        </section>
+
+        <!-- SERVIÇOS (modelos com layout e preço)
+             Para mudar um preço: altere o data-preco do <article> e o texto do preço logo abaixo. -->
+        <section id="servicos" class="secao">
+            <div class="conteudo">
+                <div class="secao-cabeca">
+                    <h2>Escolha um modelo</h2>
+                    <p>Cada modelo já vem com o layout pronto. A gente troca as cores, os textos e as fotos pelos do seu negócio.</p>
+                </div>
+
+                <div class="filtros" role="group" aria-label="Filtrar modelos">
+                    <button type="button" data-filtro="todos" aria-pressed="true">Todos</button>
+                    <button type="button" data-filtro="sites" aria-pressed="false">Sites</button>
+                    <button type="button" data-filtro="sistemas" aria-pressed="false">Sistemas</button>
+                </div>
+
+                <div class="modelos">
+
+                    <!-- Página única -->
+                    <article class="modelo acento-vermelho" data-categoria="sites" data-modelo="Página única" data-preco="390">
+                        <div class="previa" role="img" aria-label="Prévia do layout: página única com título grande, botão e três destaques">
+                            <div class="previa-barra"><i></i><i></i><i></i></div>
+                            <div class="previa-tela">
+                                <div class="pl-hero">
+                                    <span class="w w-titulo"></span>
+                                    <span class="w w-titulo curto"></span>
+                                    <span class="w w-linha"></span>
+                                    <span class="w-botao"></span>
+                                </div>
+                                <div class="pl-cards"><span></span><span></span><span></span></div>
+                            </div>
+                        </div>
+                        <div class="modelo-info">
+                            <p class="modelo-tipo">Site</p>
+                            <h3>Página única</h3>
+                            <p>Uma página só, direto ao ponto. Ideal para divulgar um serviço, um produto ou um evento.</p>
+                            <ul class="lista-check">
+                                <li>Apresentação, serviços e contato</li>
+                                <li>Botão que abre o seu WhatsApp</li>
+                                <li>Funciona no computador e no celular</li>
+                            </ul>
+                            <div class="modelo-rodape">
+                                <p class="preco"><span class="preco-valor">R$ 390</span><span class="preco-obs">pagamento único, pronto em 5 dias</span></p>
+                                <button type="button" class="botao-escolher" data-escolher-modelo="Página única">Quero este</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Site institucional -->
+                    <article class="modelo acento-verde" data-categoria="sites" data-modelo="Site institucional" data-preco="790">
+                        <div class="previa" role="img" aria-label="Prévia do layout: site institucional com menu, foto em destaque e três blocos">
+                            <div class="previa-barra"><i></i><i></i><i></i></div>
+                            <div class="previa-tela">
+                                <div class="pi-nav">
+                                    <span class="w w-logo"></span>
+                                    <span class="pi-links"><span class="w"></span><span class="w"></span><span class="w"></span><span class="w"></span></span>
+                                </div>
+                                <div class="pi-hero">
+                                    <div class="pi-texto">
+                                        <span class="w w-titulo"></span>
+                                        <span class="w w-titulo curto"></span>
+                                        <span class="w w-linha"></span>
+                                        <span class="w-botao"></span>
+                                    </div>
+                                    <span class="pi-imagem"></span>
+                                </div>
+                                <div class="pl-cards pi-cards"><span></span><span></span><span></span></div>
+                            </div>
+                        </div>
+                        <div class="modelo-info">
+                            <p class="modelo-tipo">Site</p>
+                            <h3>Site institucional</h3>
+                            <p>O site completo da sua empresa, com páginas separadas para cada assunto.</p>
+                            <ul class="lista-check">
+                                <li>Até 5 páginas: início, sobre, serviços, galeria e contato</li>
+                                <li>Formulário de contato e mapa de localização</li>
+                                <li>Links para as suas redes sociais</li>
+                            </ul>
+                            <div class="modelo-rodape">
+                                <p class="preco"><span class="preco-valor">R$ 790</span><span class="preco-obs">pagamento único, pronto em 10 dias</span></p>
+                                <button type="button" class="botao-escolher" data-escolher-modelo="Site institucional">Quero este</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Loja virtual -->
+                    <article class="modelo acento-azul" data-categoria="sites" data-modelo="Loja virtual" data-preco="1490">
+                        <div class="previa" role="img" aria-label="Prévia do layout: loja virtual com busca, carrinho e vitrine de produtos">
+                            <div class="previa-barra"><i></i><i></i><i></i></div>
+                            <div class="previa-tela">
+                                <div class="pv-topo">
+                                    <span class="w w-logo"></span>
+                                    <span class="pv-busca"></span>
+                                    <span class="pv-carrinho"></span>
+                                </div>
+                                <div class="pv-grade">
+                                    <div class="pv-produto"><span class="pv-foto"></span><span class="w"></span><span class="w w-preco"></span></div>
+                                    <div class="pv-produto"><span class="pv-foto"></span><span class="w"></span><span class="w w-preco"></span></div>
+                                    <div class="pv-produto"><span class="pv-foto"></span><span class="w"></span><span class="w w-preco"></span></div>
+                                    <div class="pv-produto"><span class="pv-foto"></span><span class="w"></span><span class="w w-preco"></span></div>
+                                    <div class="pv-produto"><span class="pv-foto"></span><span class="w"></span><span class="w w-preco"></span></div>
+                                    <div class="pv-produto"><span class="pv-foto"></span><span class="w"></span><span class="w w-preco"></span></div>
+                                    <div class="pv-produto"><span class="pv-foto"></span><span class="w"></span><span class="w w-preco"></span></div>
+                                    <div class="pv-produto"><span class="pv-foto"></span><span class="w"></span><span class="w w-preco"></span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modelo-info">
+                            <p class="modelo-tipo">Site</p>
+                            <h3>Loja virtual</h3>
+                            <p>Venda pela internet com vitrine, carrinho e pagamento on-line.</p>
+                            <ul class="lista-check">
+                                <li>Cadastro inicial de até 50 produtos</li>
+                                <li>Pagamento por Pix e cartão</li>
+                                <li>Painel para você mudar produtos e preços</li>
+                            </ul>
+                            <div class="modelo-rodape">
+                                <p class="preco"><span class="preco-valor">R$ 1.490</span><span class="preco-obs">pagamento único, pronto em 20 dias</span></p>
+                                <button type="button" class="botao-escolher" data-escolher-modelo="Loja virtual">Quero este</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Agendamento online -->
+                    <article class="modelo acento-amarelo" data-categoria="sistemas" data-modelo="Agendamento online" data-preco="1190">
+                        <div class="previa" role="img" aria-label="Prévia do layout: sistema de agendamento com menu lateral e calendário com horários marcados">
+                            <div class="previa-barra"><i></i><i></i><i></i></div>
+                            <div class="previa-tela linha">
+                                <div class="pa-lado">
+                                    <span class="w w-logo"></span>
+                                    <span class="w"></span>
+                                    <span class="w ativo"></span>
+                                    <span class="w"></span>
+                                    <span class="w"></span>
+                                </div>
+                                <div class="pa-agenda">
+                                    <span class="w w-titulo curto"></span>
+                                    <div class="pa-dias">
+                                        <span></span><span class="marcado"></span><span></span><span></span><span class="marcado"></span><span></span><span></span>
+                                        <span class="marcado"></span><span></span><span class="hoje"></span><span class="marcado"></span><span></span><span class="marcado"></span><span></span>
+                                        <span></span><span class="marcado"></span><span class="marcado"></span><span></span><span></span><span class="marcado"></span><span></span>
+                                        <span></span><span></span><span class="marcado"></span><span></span><span class="marcado"></span><span></span><span></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modelo-info">
+                            <p class="modelo-tipo">Sistema</p>
+                            <h3>Agendamento online</h3>
+                            <p>Seus clientes marcam horário sozinhos. Bom para salões, barbearias, clínicas e estúdios.</p>
+                            <ul class="lista-check">
+                                <li>Agenda separada por profissional</li>
+                                <li>Cliente escolhe o serviço e o horário livre</li>
+                                <li>Aviso por e-mail a cada novo agendamento</li>
+                            </ul>
+                            <div class="modelo-rodape">
+                                <p class="preco"><span class="preco-valor">R$ 1.190</span><span class="preco-obs">pagamento único, pronto em 15 dias</span></p>
+                                <button type="button" class="botao-escolher" data-escolher-modelo="Agendamento online">Quero este</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Cardápio e pedidos -->
+                    <article class="modelo acento-vermelho" data-categoria="sistemas" data-modelo="Cardápio e pedidos" data-preco="690">
+                        <div class="previa" role="img" aria-label="Prévia do layout: cardápio no celular com fotos dos pratos, botões de adicionar e barra do pedido">
+                            <div class="previa-tela pc">
+                                <div class="pc-celular">
+                                    <span class="w w-titulo curto"></span>
+                                    <div class="pc-item"><span class="pc-foto"></span><span class="pc-txt"><span class="w"></span><span class="w curto"></span></span><span class="pc-mais"></span></div>
+                                    <div class="pc-item"><span class="pc-foto"></span><span class="pc-txt"><span class="w"></span><span class="w curto"></span></span><span class="pc-mais"></span></div>
+                                    <div class="pc-item"><span class="pc-foto"></span><span class="pc-txt"><span class="w"></span><span class="w curto"></span></span><span class="pc-mais"></span></div>
+                                    <span class="pc-pedido"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modelo-info">
+                            <p class="modelo-tipo">Sistema</p>
+                            <h3>Cardápio e pedidos</h3>
+                            <p>Cardápio digital para lanchonetes, restaurantes e confeitarias, com pedido direto no WhatsApp.</p>
+                            <ul class="lista-check">
+                                <li>Pratos com foto, descrição e preço</li>
+                                <li>Cliente monta o pedido e envia pelo WhatsApp</li>
+                                <li>Você muda os preços quando quiser</li>
+                            </ul>
+                            <div class="modelo-rodape">
+                                <p class="preco"><span class="preco-valor">R$ 690</span><span class="preco-obs">pagamento único, pronto em 7 dias</span></p>
+                                <button type="button" class="botao-escolher" data-escolher-modelo="Cardápio e pedidos">Quero este</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Estoque e vendas -->
+                    <article class="modelo acento-verde" data-categoria="sistemas" data-modelo="Estoque e vendas" data-preco="1890">
+                        <div class="previa" role="img" aria-label="Prévia do layout: painel de estoque e vendas com indicadores, gráfico de barras e tabela">
+                            <div class="previa-barra"><i></i><i></i><i></i></div>
+                            <div class="previa-tela linha">
+                                <div class="pa-lado">
+                                    <span class="w w-logo"></span>
+                                    <span class="w ativo"></span>
+                                    <span class="w"></span>
+                                    <span class="w"></span>
+                                    <span class="w"></span>
+                                </div>
+                                <div class="pe-main">
+                                    <div class="pe-kpis">
+                                        <span class="pe-kpi"><span class="w curto"></span><span class="w w-titulo"></span></span>
+                                        <span class="pe-kpi"><span class="w curto"></span><span class="w w-titulo"></span></span>
+                                        <span class="pe-kpi"><span class="w curto"></span><span class="w w-titulo"></span></span>
+                                    </div>
+                                    <div class="pe-grafico"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+                                    <div class="pe-tabela"><span class="w"></span><span class="w"></span><span class="w"></span></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modelo-info">
+                            <p class="modelo-tipo">Sistema</p>
+                            <h3>Estoque e vendas</h3>
+                            <p>Controle o que entra e o que sai da sua loja, com o caixa do dia sempre em dia.</p>
+                            <ul class="lista-check">
+                                <li>Cadastro de produtos e aviso de estoque baixo</li>
+                                <li>Registro de vendas e fechamento de caixa</li>
+                                <li>Relatório do mês e acesso para funcionários</li>
+                            </ul>
+                            <div class="modelo-rodape">
+                                <p class="preco"><span class="preco-valor">R$ 1.890</span><span class="preco-obs">pagamento único, pronto em 25 dias</span></p>
+                                <button type="button" class="botao-escolher" data-escolher-modelo="Estoque e vendas">Quero este</button>
+                            </div>
+                        </div>
+                    </article>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- PREÇOS (planos mensais e extras) -->
+        <section id="precos" class="secao secao-cinza">
+            <div class="conteudo">
+                <div class="secao-cabeca">
+                    <h2>Planos para manter tudo no ar</h2>
+                    <p>Depois de pronto, o seu site ou sistema precisa ficar hospedado. Escolha o plano mensal que combina com você.</p>
+                </div>
+
+                <div class="planos">
+                    <article class="plano" data-plano="Essencial" data-preco="29">
+                        <h3>Essencial</h3>
+                        <p class="plano-preco">R$ 29<span>/mês</span></p>
+                        <p class="plano-desc">Para quem só precisa do site no ar.</p>
+                        <ul class="lista-check">
+                            <li>Site no ar 24 horas por dia</li>
+                            <li>Cadeado de segurança (HTTPS)</li>
+                            <li>Cópia de segurança toda semana</li>
+                        </ul>
+                        <button type="button" class="botao-plano" data-escolher-plano="Essencial">Escolher Essencial</button>
+                    </article>
+
+                    <article class="plano plano-destaque" data-plano="Profissional" data-preco="59">
+                        <p class="plano-selo">Mais escolhido</p>
+                        <h3>Profissional</h3>
+                        <p class="plano-preco">R$ 59<span>/mês</span></p>
+                        <p class="plano-desc">Para quem atualiza o site com frequência.</p>
+                        <ul class="lista-check">
+                            <li>Tudo do plano Essencial</li>
+                            <li>Até 3 alterações por mês</li>
+                            <li>E-mail com o nome do seu negócio</li>
+                            <li>Suporte pelo WhatsApp em horário comercial</li>
+                        </ul>
+                        <button type="button" class="botao-plano" data-escolher-plano="Profissional">Escolher Profissional</button>
+                    </article>
+
+                    <article class="plano" data-plano="Completo" data-preco="99">
+                        <h3>Completo</h3>
+                        <p class="plano-preco">R$ 99<span>/mês</span></p>
+                        <p class="plano-desc">Para quem quer a gente cuidando de tudo.</p>
+                        <ul class="lista-check">
+                            <li>Tudo do plano Profissional</li>
+                            <li>Alterações pequenas sem limite</li>
+                            <li>Relatório mensal de visitas</li>
+                            <li>Atendimento com prioridade</li>
+                        </ul>
+                        <button type="button" class="botao-plano" data-escolher-plano="Completo">Escolher Completo</button>
+                    </article>
+                </div>
+
+                <p class="planos-nota">Sem fidelidade: você pode trocar ou cancelar o plano quando quiser.</p>
+
+                <div class="extras">
+                    <h3>Extras</h3>
+                    <ul class="extras-lista">
+                        <li data-extra="Domínio .com.br" data-preco="40"><span>Domínio .com.br (o endereço do site)</span><strong>R$ 40/ano</strong></li>
+                        <li data-extra="Criação de logotipo" data-preco="150"><span>Criação de logotipo</span><strong>R$ 150</strong></li>
+                        <li data-extra="Textos escritos por nós" data-preco="120"><span>Textos escritos por nós</span><strong>R$ 120</strong></li>
+                        <li data-extra="Pacote de 10 fotos" data-preco="60"><span>Pacote de 10 fotos profissionais</span><strong>R$ 60</strong></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- COMO FUNCIONA -->
+        <section id="como-funciona" class="secao">
+            <div class="conteudo">
+                <div class="secao-cabeca">
+                    <h2>Como funciona</h2>
+                    <p>Do pedido ao site no ar em quatro passos.</p>
+                </div>
+                <ol class="passos">
+                    <li>
+                        <span class="passo-num">1</span>
+                        <h3>Escolha o modelo</h3>
+                        <p>Veja os layouts e escolha o que combina com o seu negócio.</p>
+                    </li>
+                    <li>
+                        <span class="passo-num">2</span>
+                        <h3>Mande suas informações</h3>
+                        <p>Logo, cores, textos e fotos. Se ainda não tiver, a gente ajuda.</p>
+                    </li>
+                    <li>
+                        <span class="passo-num">3</span>
+                        <h3>Aprove o layout</h3>
+                        <p>Você vê tudo antes de publicar e pode pedir ajustes.</p>
+                    </li>
+                    <li>
+                        <span class="passo-num">4</span>
+                        <h3>Site no ar</h3>
+                        <p>Publicamos e entregamos funcionando no computador e no celular.</p>
+                    </li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- SOBRE -->
+        <section id="sobre" class="secao secao-cinza">
+            <div class="conteudo sobre-grade">
+                <div>
+                    <h2>Sobre a SiteExpress</h2>
+                    <p>Criamos sites e sistemas a partir de modelos já testados. Assim o seu projeto sai mais rápido e mais barato, sem perder a cara do seu negócio.</p>
+                    <p>Atendemos desde quem está começando, como uma confeitaria que vende pelo Instagram, até empresas que precisam organizar agenda, estoque e vendas.</p>
+                </div>
+                <ul class="sobre-pontos">
+                    <li>Atendimento pelo WhatsApp, de segunda a sábado</li>
+                    <li>Você aprova o layout antes de publicar</li>
+                    <li>Todos os modelos funcionam no celular</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- DÚVIDAS -->
+        <section id="duvidas" class="secao">
+            <div class="conteudo duvidas">
+                <h2>Dúvidas frequentes</h2>
+                <div class="perguntas">
+                    <details>
+                        <summary>Preciso ter um domínio (o endereço www)?</summary>
+                        <p>Não. Se você ainda não tem, registramos um domínio .com.br para você por R$ 40 por ano.</p>
+                    </details>
+                    <details>
+                        <summary>Posso pedir mudanças depois que o site estiver pronto?</summary>
+                        <p>Pode. Os planos Profissional e Completo já incluem alterações todo mês. No plano Essencial, cada alteração é combinada à parte.</p>
+                    </details>
+                    <details>
+                        <summary>Como funciona o pagamento?</summary>
+                        <p>Metade na aprovação do pedido e metade na entrega, por Pix. Se preferir, parcelamos em até 10x no cartão.</p>
+                    </details>
+                    <details>
+                        <summary>Quanto tempo demora?</summary>
+                        <p>De 5 a 25 dias depois que recebemos suas informações, dependendo do modelo. O prazo de cada um aparece junto do preço.</p>
+                    </details>
+                </div>
+            </div>
+        </section>
+
+        <!-- PEDIDO -->
+        <section id="pedido" class="secao secao-cinza">
+            <div class="conteudo">
+                <div class="secao-cabeca">
+                    <h2>Monte seu pedido</h2>
+                    <p>Escolha o modelo, o plano e os extras. O total aparece na hora e o pedido vai direto para o nosso WhatsApp.</p>
+                </div>
+
+                <div class="pedido-grade">
+                    <form class="pedido-form" id="pedido-form" novalidate>
+                        <div class="duas-colunas">
+                            <div class="campo">
+                                <label for="nome">Seu nome</label>
+                                <input id="nome" name="nome" type="text" autocomplete="name" required>
+                            </div>
+                            <div class="campo">
+                                <label for="negocio">Nome do negócio <span class="opcional">(opcional)</span></label>
+                                <input id="negocio" name="negocio" type="text" autocomplete="organization">
+                            </div>
+                        </div>
+
+                        <div class="duas-colunas">
+                            <div class="campo">
+                                <label for="modelo">Modelo</label>
+                                <select id="modelo" name="modelo"></select>
+                            </div>
+                            <div class="campo">
+                                <label for="plano">Plano mensal</label>
+                                <select id="plano" name="plano"></select>
+                            </div>
+                        </div>
+
+                        <fieldset class="campo">
+                            <legend>Extras</legend>
+                            <div id="extras-opcoes" class="extras-opcoes"></div>
+                        </fieldset>
+
+                        <div class="campo">
+                            <label for="obs">Conte um pouco sobre o seu negócio <span class="opcional">(opcional)</span></label>
+                            <textarea id="obs" name="obs" rows="3"></textarea>
+                        </div>
+                    </form>
+
+                    <aside class="resumo" aria-labelledby="resumo-titulo">
+                        <h3 id="resumo-titulo">Resumo do pedido</h3>
+                        <dl class="resumo-linhas">
+                            <div><dt id="r-modelo-nome">Modelo</dt><dd id="r-modelo-valor">R$ 0</dd></div>
+                            <div><dt>Extras</dt><dd id="r-extras">R$ 0</dd></div>
+                        </dl>
+                        <div class="resumo-total">
+                            <p class="resumo-rotulo">Pagamento único</p>
+                            <p class="resumo-valor" id="r-total" aria-live="polite">R$ 0</p>
+                            <p class="resumo-parcela" id="r-parcela">ou 10x de R$ 0 no cartão</p>
+                        </div>
+                        <div class="resumo-mensal">
+                            <span>Mensalidade</span>
+                            <strong id="r-mensal">R$ 0/mês</strong>
+                        </div>
+                        <a href="#" class="botao botao-cheio" id="enviar" target="_blank" rel="noopener">Enviar pedido pelo WhatsApp</a>
+                        <p class="erro" id="erro" role="alert"></p>
+                        <p class="resumo-aviso">Seus dados vão só na mensagem do WhatsApp. Nada fica salvo no site.</p>
+                    </aside>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="rodape">
+        <div class="conteudo rodape-grade">
+            <div>
+                <img src="img/logo.png" class="logo logo-claro" alt="SiteExpress" width="720" height="199">
+                <img src="img/logo-escuro.png" class="logo logo-escuro" alt="" width="720" height="199">
+                <p>Sites e sistemas para o seu negócio.</p>
+            </div>
+            <nav class="rodape-links" aria-label="Rodapé">
+                <a href="#servicos">Serviços</a>
+                <a href="#precos">Preços</a>
+                <a href="#como-funciona">Como funciona</a>
+                <a href="#sobre">Sobre</a>
+                <a href="#pedido">Fazer pedido</a>
+            </nav>
+            <p class="rodape-copy">© 2026 SiteExpress. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
