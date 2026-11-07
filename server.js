@@ -9,14 +9,19 @@ server.get('/', (req, res) => {
 });
 
 server.post('/criarUsuario', (req, res) => {
-  const { nome } = req.body;
-  const { email } = req.body;
-  const { telefone } = req.body;
-  const { negocio } = req.body;
-  const { plano } = req.body;
-  const { obs } = req.body;
-  const { extrasOpcoes } = req.body;
-  const { modelo } = req.body;
+  const campos  = { nome, email, telefone, negocio, plano, obs, extrasOpcoes, modelo }
+
+  const camposFaltando = Object.keys(campos).find(key => !campos[key]);
+
+  if(camposFaltando){
+
+    console.log(`O campo '${camposFaltando}' esta faltando`);
+
+  }else {
+    console.log("todos os campos foram preenchidos");
+  }
+
+
 
   
 })
