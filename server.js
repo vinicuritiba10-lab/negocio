@@ -9,7 +9,7 @@ server.get('/', (req, res) => {
 });
 
 server.post('/criarUsuario', (req, res) => {
-  const campos  = { nome, email, telefone, negocio, plano, obs, extrasOpcoes, modelo }
+  const campos  = { nome, email, telefone, negocio, plano, extrasOpcoes, modelo }
 
   const camposFaltando = Object.keys(campos).find(key => !campos[key]);
 
@@ -17,14 +17,23 @@ server.post('/criarUsuario', (req, res) => {
 
     console.log(`O campo '${camposFaltando}' esta faltando`);
 
-  }else {
+    return res.status(400).json({ error: `o campo ${camposFaltando}, e obrigatorio`});
+
+  }
     console.log("todos os campos foram preenchidos");
+  try {
+
+    return res.status(201).json({ message: "usuario criado com sucesso"});
+
+  } catch (error) {
+
+    console.error("erro ao salvar no banco:", error);
+    return res.status(500).json({ error: "erro interno no servidor."});
+
   }
 
 
-
-  
-})
+});
 
 
 
