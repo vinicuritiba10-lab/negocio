@@ -1,15 +1,21 @@
 const express = require ("express");
 const server = express()
-const port = 3000;
-
+const cors = require('cors');
+server.use(cors());
 server.use(express.json());
+server.use(express.urlencoded({ extended: true }));
+const port = 3000;
 
 server.get('/', (req, res) => {
   res.json({ mensagem: "Bem-vindo ao meu backend Node.js!" });
 });
 
-server.post('/criarUsuario', (req, res) => {
-  const campos  = { nome, email, telefone, negocio, plano, extrasOpcoes, modelo }
+//para quem ler: eu sei que esta feio, nao me julgue :), o gemini e burro
+
+server.post('/criarUsuario', async (req, res) => {
+  console.log(req.body);
+  const { nome, email, plano, telefone, extrasOpcoes, modelo } = req.body;
+  const campos  = { nome, email, plano, telefone, extrasOpcoes, modelo };
 
   const camposFaltando = Object.keys(campos).find(key => !campos[key]);
 
@@ -22,6 +28,10 @@ server.post('/criarUsuario', (req, res) => {
   }
     console.log("todos os campos foram preenchidos");
   try {
+
+    const novoUsuario = await usuarios.create({
+      nome, email, telefone, obs, negocio, plano, extrasOpcoes, modelo
+    });
 
     return res.status(201).json({ message: "usuario criado com sucesso"});
 
@@ -45,5 +55,5 @@ server.post('/criarUsuario', (req, res) => {
 
 module.exports = server;
 server.listen(port, () => {
-  console.log(`🚀 Servidor rodando em http://localhost:${port}`);
+  console.log(` Servidor rodando em http://localhost:${port}`);
 });

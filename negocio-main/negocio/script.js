@@ -69,6 +69,8 @@ const extras = [...document.querySelectorAll(".extras-lista li")].map((e) => ({
 
 // ---------- formulário ----------
 const campoNome = document.getElementById("nome");
+const campoEmail = document.getElementById("email");
+const campoTelefone = document.getElementById("telefone");
 const campoNegocio = document.getElementById("negocio");
 const campoModelo = document.getElementById("modelo");
 const campoPlano = document.getElementById("plano");
@@ -148,6 +150,71 @@ botaoEnviar.addEventListener("click", (evento) => {
     erro.textContent = "Escreva seu nome para enviar o pedido.";
     campoNome.setAttribute("aria-invalid", "true");
     campoNome.focus();
+  }
+});
+
+const form = document.querySelector('#pedido-form');
+
+// Impede qualquer envio padrão do formulário se houver
+form.addEventListener('submit', (e) => e.preventDefault());
+
+botaoEnviar.addEventListener('click', async (evento) => {
+  // 1. Validação básica se o nome foi preenchido
+  if (!campoNome.value.trim()) {
+    evento.preventDefault();
+    erro.textContent = "Escreva seu nome para enviar o pedido.";
+    campoNome.setAttribute("aria-invalid", "true");
+    campoNome.focus();
+    return;
+  }
+
+  // Limpa o erro se passou
+  erro.textContent = "";
+
+  // 2. Coleta os extras marcados
+  const escolhidos = [...caixaExtras.querySelectorAll("input:checked")].map((c) => extras[c.value].nome);
+
+  // 3. Monta o objeto com os dados exatos do formulário
+  const formData = {
+    nome: campoNome.value.trim(),
+    email: campoEmail.value.trim(),
+    telefone: campoTelefone.value.trim(),
+    modelo: campoModelo.value,
+    negocio: campoNegocio.value.trim(),
+    plano: campoPlano.value,
+    obs: campoObs.value.trim(),
+    extrasOpcoes: escolhidos.join(", ") || "nenhum"
+  };
+
+  console.log("Enviando dados para o servidor:", formData);
+
+  try {
+    // 4. Salva no banco de dados via fetch no seu servidor Node.js/Express
+    const resposta = await fetch('http://localhost:3000/criarUsuario', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(formData)
+    });
+
+    const resultado = await resposta.json();
+
+    if (!resposta.ok) {
+      console.error("Erro retornado pelo servidor:", resultado.error);
+      alert(resultado.error || 'Erro ao cadastrar pedido no sistema.');
+      evento.preventDefault(); // Trava o WhatsApp se falhar no banco
+      return;
+    }
+
+    console.log("Salvo no banco com sucesso!", resultado);
+    // Se deu tudo certo, o link do WhatsApp (href) já foi montado pela função atualizar() 
+    // e o navegador vai abrir o WhatsApp normalmente agora!
+
+  } catch (err) {
+    console.error('Erro de conexão:', err);
+    alert('Não foi possível conectar ao servidor backend.');
+    evento.preventDefault(); // Trava o WhatsApp se o servidor estiver desligado
   }
 });
 
