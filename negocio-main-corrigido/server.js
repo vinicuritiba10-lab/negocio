@@ -15,6 +15,7 @@
 require("dotenv").config(); // le o arquivo .env (DATABASE_URL, PORT)
 
 const path = require("path");
+const crypto = require("crypto");
 const express = require("express");
 const cors = require("cors");
 
@@ -23,6 +24,14 @@ const usuarios = require("./models/usuarios"); // <- faltava importar isso!
 
 const server = express();
 const port = process.env.PORT || 3000;
+
+// Hospedado (Render etc.) o site fica ATRAS de um proxy: sem isto o req.ip seria
+// sempre o IP interno do proxy, e o limitador anti-spam trataria TODOS os
+// visitantes como uma pessoa so. Em producao defina TRUST_PROXY=true nas
+// variaveis de ambiente. No seu computador deixe sem (nao precisa).
+if (process.env.TRUST_PROXY === "true") {
+  server.set("trust proxy", true);
+}
 
 // ---------------------------------------------------------
 // Configuracoes gerais (middlewares)
@@ -65,6 +74,7 @@ function limitarRequisicoes(req, res, next) {
 
 // ---------------------------------------------------------
 // Rota de teste: abra http://localhost:3000/saude pra ver se o servidor esta vivo
+// (a hospedagem tambem usa esta rota pra saber se o site subiu direito)
 // ---------------------------------------------------------
 server.get("/saude", (req, res) => {
   res.json({ mensagem: "Servidor funcionando!" });
@@ -139,6 +149,119 @@ server.post("/criarUsuario", limitarRequisicoes, async (req, res) => {
   }
 });
 
+// =========================================================
+// PAINEL ADMIN  -  http://localhost:3000/admin
+// =========================================================
+// Pagina so pra equipe: lista os pedidos, muda o status e anota quem
+// esta atendendo. Protegida por senha (variavel ADMIN_SENHA no .env).
+//
+// O arquivo da pagina fica na pasta "admin/" (e NAO em "negocio/") de
+// proposito: tudo que esta em "negocio/" e publico pra qualquer visitante.
+
+// Status que um pedido pode ter (o painel e o servidor usam esta mesma lista)
+const STATUS_VALIDOS = ["novo", "em_contato", "fechado", "pago", "perdido"];
+
+// Transforma qualquer texto em um "hash" de tamanho fixo. Serve pra comparar
+// senhas com timingSafeEqual, que exige dois valores do mesmo tamanho.
+function hashear(texto) {
+  return crypto.createHash("sha256").update(String(texto)).digest();
+}
+
+// Horarios das senhas ERRADAS no ultimo periodo. E uma contagem GERAL (nao por
+// IP) de proposito: atras de proxy o IP pode ser falsificado, e assim ninguem
+// consegue ficar testando senha sem parar.
+let senhasErradas = [];
+
+// Middleware: so deixa passar quem mandou a senha certa (login do navegador).
+function protegerAdmin(req, res, next) {
+  const senhaCorreta = process.env.ADMIN_SENHA;
+
+  // Sem senha configurada o painel fica DESLIGADO (melhor que ficar aberto).
+  if (!senhaCorreta) {
+    return res.status(503).send("Painel desativado: defina ADMIN_SENHA no .env e reinicie.");
+  }
+
+  const agora = Date.now();
+  senhasErradas = senhasErradas.filter((t) => t > agora - 15 * 60 * 1000);
+  if (senhasErradas.length >= 20) {
+    return res.status(429).send("Muitas senhas erradas. Espere 15 minutos.");
+  }
+
+  // O navegador manda "Authorization: Basic base64(usuario:senha)".
+  // Ignoramos o usuario e conferimos so a senha.
+  const cabecalho = req.headers.authorization || "";
+  let senhaDigitada = "";
+  if (cabecalho.startsWith("Basic ")) {
+    const decodificado = Buffer.from(cabecalho.slice(6), "base64").toString("utf8");
+    senhaDigitada = decodificado.slice(decodificado.indexOf(":") + 1);
+  }
+
+  const acertou =
+    cabecalho !== "" && crypto.timingSafeEqual(hashear(senhaDigitada), hashear(senhaCorreta));
+
+  if (!acertou) {
+    if (cabecalho !== "") senhasErradas.push(agora); // so conta se tentou uma senha
+    // Este cabecalho faz o navegador abrir a janelinha de usuario/senha
+    res.set("WWW-Authenticate", 'Basic realm="Painel SiteExpress"');
+    return res.status(401).send("Senha necessaria.");
+  }
+
+  res.set("Cache-Control", "no-store"); // dados de clientes: nao guardar em cache
+  next();
+}
+
+// Tudo que comeca com /admin passa pela senha antes de qualquer rota abaixo
+server.use("/admin", protegerAdmin);
+
+// A pagina do painel
+server.get("/admin", (req, res) => {
+  res.sendFile(path.join(__dirname, "admin", "admin.html"));
+});
+
+// Lista todos os pedidos, do mais novo pro mais antigo
+server.get("/admin/api/pedidos", async (req, res) => {
+  try {
+    const pedidos = await usuarios.findAll({ order: [["createdAt", "DESC"]] });
+    res.json(pedidos);
+  } catch (error) {
+    console.error("erro ao listar pedidos:", error);
+    res.status(500).json({ error: "erro interno no servidor." });
+  }
+});
+
+// Atualiza um pedido. Corpo (JSON): { status?, responsavel? } - manda so o que mudou.
+server.patch("/admin/api/pedidos/:id", async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+    if (!Number.isInteger(id)) {
+      return res.status(400).json({ error: "id invalido" });
+    }
+
+    const { status, responsavel } = req.body;
+
+    if (status !== undefined && !STATUS_VALIDOS.includes(status)) {
+      return res.status(400).json({ error: `status invalido (use: ${STATUS_VALIDOS.join(", ")})` });
+    }
+
+    const pedido = await usuarios.findByPk(id);
+    if (!pedido) {
+      return res.status(404).json({ error: "pedido nao encontrado" });
+    }
+
+    if (status !== undefined) pedido.status = status;
+    if (responsavel !== undefined) {
+      // texto vazio vira "sem responsavel" (null); limita o tamanho
+      pedido.responsavel = String(responsavel).trim().slice(0, 100) || null;
+    }
+
+    await pedido.save();
+    res.json(pedido);
+  } catch (error) {
+    console.error("erro ao atualizar pedido:", error);
+    res.status(500).json({ error: "erro interno no servidor." });
+  }
+});
+
 // ---------------------------------------------------------
 // Ligando o servidor
 // ---------------------------------------------------------
@@ -154,6 +277,26 @@ async function iniciar() {
     // tabelas existentes. Se um dia mudar um campo no model, precisa alterar
     // a tabela no Supabase na mao (ou apagar a tabela e deixar recriar).
     await db.sequelize.sync();
+
+    // O sync() acima NAO adiciona colunas novas em tabela que ja existe.
+    // Entao, se a tabela e antiga (criada antes do painel), adicionamos aqui
+    // as colunas "status" e "responsavel". Os pedidos antigos viram "novo".
+    const qi = db.sequelize.getQueryInterface();
+    const tabela = usuarios.getTableName();
+    const colunas = await qi.describeTable(tabela);
+    if (!colunas.status) {
+      await qi.addColumn(tabela, "status", {
+        type: db.Sequelize.STRING,
+        allowNull: false,
+        defaultValue: "novo",
+      });
+      console.log('Coluna "status" adicionada.');
+    }
+    if (!colunas.responsavel) {
+      await qi.addColumn(tabela, "responsavel", { type: db.Sequelize.STRING, allowNull: true });
+      console.log('Coluna "responsavel" adicionada.');
+    }
+
     console.log("Tabelas prontas.");
   } catch (error) {
     console.error("Nao consegui conectar no banco. Confira o DATABASE_URL no .env:");
