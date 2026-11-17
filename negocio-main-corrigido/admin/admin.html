@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex"> <!-- pede pro Google nao listar esta pagina -->
+<title>Pedidos - SiteExpress</title>
+<style>
+  /* Cores num lugar so: pra mudar o visual, mexa aqui. Muda sozinho no modo escuro. */
+  :root { --fundo:#f4f5f7; --cartao:#fff; --texto:#1c1f26; --suave:#667085; --borda:#dde1e7; --azul:#2456d6; }
+  @media (prefers-color-scheme: dark) {
+    :root { --fundo:#14161a; --cartao:#1e2127; --texto:#eceef2; --suave:#9aa3b2; --borda:#333945; --azul:#6f95ff; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--fundo); color:var(--texto); font:15px/1.45 system-ui, sans-serif; }
+  main { max-width: 900px; margin: 0 auto; padding: 20px 16px 60px; }
+  header { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; }
+  h1 { font-size: 22px; margin: 0; }
+  button, select, input { font: inherit; color: inherit; }
+  button { cursor:pointer; background:var(--cartao); border:1px solid var(--borda); border-radius:8px; padding:6px 12px; }
+  button[aria-pressed="true"] { background:var(--azul); border-color:var(--azul); color:#fff; }
+  .filtros { display:flex; gap:8px; flex-wrap:wrap; margin: 16px 0; }
+  .pedido { background:var(--cartao); border:1px solid var(--borda); border-radius:12px; padding:14px 16px; margin-bottom:12px; }
+  .topo { display:flex; justify-content:space-between; gap:8px; flex-wrap:wrap; }
+  .nome { font-weight:600; font-size:17px; }
+  .data, .suave { color:var(--suave); font-size:13px; }
+  .linha { margin-top:6px; }
+  .obs { white-space:pre-wrap; margin-top:8px; padding:8px 10px; border-left:3px solid var(--borda); }
+  .acoes { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top:12px; }
+  .acoes a { color:var(--azul); }
+  select, input[type=text] { background:var(--fundo); border:1px solid var(--borda); border-radius:8px; padding:6px 8px; }
+  .msg { padding:30px; text-align:center; color:var(--suave); }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Pedidos</h1>
+    <button id="atualizar">Atualizar</button>
+  </header>
+
+  <div class="filtros" id="filtros"></div>
+  <div id="lista"><p class="msg">Carregando...</p></div>
+</main>
+
+<script>
+// ---------------------------------------------------------
+// Painel de pedidos. Fluxo:
+//   1. carregar()  busca os pedidos em GET /admin/api/pedidos
+//   2. desenhar()  mostra os cartoes (respeitando o filtro escolhido)
+//   3. salvar()    manda PATCH /admin/api/pedidos/:id quando muda status/responsavel
+// O navegador ja mandou a senha ao abrir /admin, entao as chamadas abaixo
+// (mesmo endereco) ja vao autenticadas, sem precisar fazer nada.
+// ---------------------------------------------------------
+
+// Mesmos valores que o servidor aceita (STATUS_VALIDOS no server.js) + o nome bonito
+const STATUS = {
+  novo: "Novo",
+  em_contato: "Em contato",
+  fechado: "Fechado",
+  pago: "Pago",
+  perdido: "Perdido",
+};
+
+let pedidos = [];   // lista que veio do servidor
+let filtro = "todos"; // filtro de status ativo
+
+const caixaLista = document.getElementById("lista");
+const caixaFiltros = document.getElementById("filtros");
+
+// Cria um elemento HTML. Os textos entram por "textContent", NUNCA por innerHTML:
+// o que o cliente digitou no formulario (nome, observacoes...) pode conter codigo
+// malicioso, e textContent garante que ele aparece como texto puro, sem executar.
+function el(tag, props = {}, ...filhos) {
+  const e = document.createElement(tag);
+  Object.assign(e, props);
+  filhos.forEach((f) => e.append(f));
+  return e;
+}
+
+// Telefone digitado -> link do WhatsApp (poe o 55 do Brasil se faltar)
+function linkWhatsapp(telefone) {
+  let n = String(telefone).replace(/\D/g, "");
+  if (n.length <= 11) n = "55" + n;
+  return "https://wa.me/" + n;
+}
+
+async function carregar() {
+  try {
+    const r = await fetch("/admin/api/pedidos");
+    if (!r.ok) throw new Error("status " + r.status);
+    pedidos = await r.json();
+    desenhar();
+  } catch (err) {
+    console.error(err);
+    caixaLista.replaceChildren(el("p", { className: "msg", textContent: "Não consegui carregar os pedidos." }));
+  }
+}
+
+// Manda uma mudanca pro servidor. "mudanca" ex: { status: "pago" }
+async function salvar(pedido, mudanca, aviso) {
+  aviso.textContent = "salvando...";
+  try {
+    const r = await fetch("/admin/api/pedidos/" + pedido.id, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(mudanca),
+    });
+    if (!r.ok) throw new Error("status " + r.status);
+    Object.assign(pedido, await r.json()); // atualiza o pedido na memoria
+    aviso.textContent = "salvo ✓";
+    desenharFiltros(); // os contadores podem ter mudado
+  } catch (err) {
+    console.error(err);
+    aviso.textContent = "erro ao salvar";
+  }
+}
+
+function desenharFiltros() {
+  const contar = (s) => pedidos.filter((p) => p.status === s).length;
+  const botoes = [["todos", `Todos (${pedidos.length})`]];
+  Object.entries(STATUS).forEach(([chave, nome]) => botoes.push([chave, `${nome} (${contar(chave)})`]));
+
+  caixaFiltros.replaceChildren(
+    ...botoes.map(([chave, texto]) => {
+      const b = el("button", { textContent: texto });
+      b.setAttribute("aria-pressed", String(chave === filtro));
+      b.addEventListener("click", () => { filtro = chave; desenhar(); });
+      return b;
+    })
+  );
+}
+
+function desenhar() {
+  desenharFiltros();
+  const visiveis = pedidos.filter((p) => filtro === "todos" || p.status === filtro);
+
+  if (!visiveis.length) {
+    caixaLista.replaceChildren(el("p", { className: "msg", textContent: "Nenhum pedido aqui." }));
+    return;
+  }
+
+  caixaLista.replaceChildren(...visiveis.map(cartao));
+}
+
+// Monta o cartao de UM pedido
+function cartao(p) {
+  const aviso = el("span", { className: "suave" });
+
+  // menu de status
+  const menu = el("select");
+  Object.entries(STATUS).forEach(([chave, nome]) => menu.append(new Option(nome, chave)));
+  menu.value = p.status;
+  menu.addEventListener("change", () => salvar(p, { status: menu.value }, aviso));
+
+  // campo "quem esta atendendo" (salva quando sai do campo / aperta Enter)
+  const resp = el("input", { type: "text", placeholder: "Quem atende?", value: p.responsavel || "" });
+  resp.addEventListener("change", () => salvar(p, { responsavel: resp.value }, aviso));
+
+  const data = new Date(p.createdAt).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" });
+
+  const e = el("article", { className: "pedido" },
+    el("div", { className: "topo" },
+      el("span", { className: "nome", textContent: p.nome + (p.negocio ? " · " + p.negocio : "") }),
+      el("span", { className: "data", textContent: "#" + p.id + " · " + data })
+    ),
+    el("div", { className: "linha", textContent: `${p.modelo} · plano ${p.plano} · extras: ${p.extrasOpcoes || "nenhum"}` })
+  );
+
+  if (p.obs) e.append(el("div", { className: "obs", textContent: p.obs }));
+
+  e.append(
+    el("div", { className: "acoes" },
+      el("a", { href: linkWhatsapp(p.telefone), target: "_blank", rel: "noopener", textContent: "WhatsApp " + p.telefone }),
+      el("a", { href: "mailto:" + p.email, textContent: p.email }),
+    ),
+    el("div", { className: "acoes" }, menu, resp, aviso)
+  );
+  return e;
+}
+
+document.getElementById("atualizar").addEventListener("click", carregar);
+carregar();
+</script>
+</body>
+</html>
