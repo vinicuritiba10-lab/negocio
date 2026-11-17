@@ -51,6 +51,18 @@ const usuarios = db.sequelize.define("usuarios", {
     type: db.Sequelize.TEXT,
     allowNull: true,
   },
+  // ---- campos do painel /admin (o cliente nao preenche, so a equipe) ----
+  // Em que pe esta o atendimento: novo | em_contato | fechado | pago | perdido
+  status: {
+    type: db.Sequelize.STRING,
+    allowNull: false,
+    defaultValue: "novo", // todo pedido que chega comeca como "novo"
+  },
+  // Quem da equipe esta cuidando deste cliente (texto livre, ex: "Vini")
+  responsavel: {
+    type: db.Sequelize.STRING,
+    allowNull: true,
+  },
 });
 
 module.exports = usuarios;
